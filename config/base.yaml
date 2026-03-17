@@ -1,0 +1,152 @@
+system:
+  mode: paper
+  log_level: INFO
+  timezone: UTC
+
+markets:
+  stocks:
+    universe:
+      - NVDA
+      - AAPL
+      - MSFT
+      - TSLA
+      - AMZN
+      - META
+      - GOOGL
+      - AMD
+      - SPY
+      - QQQ
+      - DVN
+      - XOM
+      - NEE
+      - CRM
+      - NOW
+    data_interval: 1h
+    lookback_days: 90
+  crypto:
+    pairs:
+      - BTC/USDT
+      - ETH/USDT
+      - SOL/USDT
+      - BNB/USDT
+      - AVAX/USDT
+    exchange: binance
+    data_interval: 1h
+    lookback_days: 90
+    use_funding_rates: true
+    use_onchain: true
+
+ingestion:
+  reddit:
+    subreddits: [wallstreetbets, investing, stocks, CryptoCurrency, Bitcoin, ethfinance]
+    posts_per_fetch: 100
+    fetch_interval_minutes: 15
+  news_rss:
+    feeds:
+      - https://feeds.finance.yahoo.com/rss/2.0/headline
+      - https://feeds.reuters.com/reuters/businessNews
+      - https://www.coindesk.com/arc/outboundfeeds/rss/
+      - https://cointelegraph.com/rss
+    fetch_interval_minutes: 10
+  sec_edgar:
+    form_types: [4, 8-K, 10-Q]
+    fetch_interval_hours: 1
+    lookback_days: 30
+  twitter_nitter:
+    nitter_instance: https://nitter.net
+    fetch_interval_minutes: 20
+  onchain:
+    metrics: [btc_exchange_netflow, eth_exchange_netflow, funding_rates, whale_transactions]
+    fetch_interval_hours: 1
+
+mirofish:
+  enabled: true
+  mock_mode: true
+  url: http://localhost:8001
+  n_agents: 1000
+  horizon_hours: 6
+  max_simulations_per_cycle: 3
+  min_event_confidence: 0.40
+  cache_minutes: 30
+  base_weight: 0.90
+
+cleaning:
+  bot_filter:
+    min_account_age_days: 30
+    max_tweets_per_day: 50
+    min_follower_following_ratio: 0.1
+    max_duplicate_cosine_sim: 0.9
+    consensus_required: 3
+  source_trust_weights:
+    reuters: 1.0
+    bloomberg: 1.0
+    yahoo_finance: 0.85
+    coindesk: 0.80
+    reddit_wsb: 0.60
+    twitter: 0.55
+    cointelegraph: 0.70
+    sec_form4: 1.0
+    mirofish: 0.90
+
+nlp:
+  news_model: ProsusAI/finbert
+  crypto_model: ElKulako/cryptobert
+  min_confidence: 0.45
+  entity_min_score: 0.80
+  factor_ic_threshold: 0.05
+
+regime:
+  reference_window_days: 30
+  current_window_days: 7
+  drift_tests: [ks_test, mmd, chi_squared]
+  thresholds:
+    stable_p: 0.3
+    watch_p: 0.1
+    critical_p: 0.1
+  volatility_z_critical: 3.0
+
+prediction:
+  model: ensemble
+  horizons: [4h, 24h]
+  min_confidence_threshold: 0.45
+  walk_forward:
+    n_windows: 12
+    train_months: 6
+    test_months: 1
+
+decision:
+  kelly_fraction: 0.25
+  max_position_pct: 0.05
+  regime_position_scale:
+    stable: 1.0
+    watch: 0.5
+    critical: 0.0
+  min_edge_pct: 0.015
+  consecutive_loss_limit: 3
+
+blackswan:
+  drawdown_pct_limit: 0.15
+  volatility_z_limit: 3.0
+  pause_duration_hours: 24
+  capital_lock_instrument: cash
+  capital_lock_days: 5
+
+execution:
+  default_mode: signal_only
+  slippage_model:
+    stocks_bps: 5
+    crypto_bps: 10
+  retry_attempts: 3
+  order_type: limit
+
+alerts:
+  telegram:
+    send_on_signal: true
+    send_on_regime_change: true
+    send_on_blackswan: true
+    min_confidence_to_alert: 0.45
+
+api:
+  host: 0.0.0.0
+  port: 8000
+  workers: 2

@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "quantshift"
+version = "1.0.0"
+description = "QUANTSHIFT-SWARM: Regime-Aware Sentiment Fusion + MiroFish Swarm Intelligence"
+requires-python = ">=3.11"
+
+dependencies = [
+  "yfinance>=0.2.36",
+  "praw>=7.7.1",
+  "feedparser>=6.0.11",
+  "sec-edgar-downloader>=5.0.2",
+  "python-binance>=1.0.19",
+  "httpx>=0.27.0",
+  "beautifulsoup4>=4.12.3",
+  "lxml>=5.2.1",
+  "transformers>=4.40.0",
+  "torch>=2.3.0",
+  "sentence-transformers>=3.0.0",
+  "scikit-learn>=1.4.2",
+  "pytorch-forecasting>=1.0.0",
+  "pytorch-lightning>=2.2.0",
+  "xgboost>=2.0.3",
+  "lightgbm>=4.3.0",
+  "shap>=0.45.0",
+  "scipy>=1.13.0",
+  "numpy>=1.26.4",
+  "pandas>=2.2.0",
+  "statsmodels>=0.14.2",
+  "ccxt>=4.3.0",
+  "fastapi>=0.111.0",
+  "uvicorn>=0.29.0",
+  "pydantic>=2.7.0",
+  "python-telegram-bot>=21.3",
+  "python-dotenv>=1.0.1",
+  "pyyaml>=6.0.1",
+  "loguru>=0.7.2",
+  "rich>=13.7.1",
+  "reportlab>=4.2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.2.0","pytest-asyncio>=0.23.7","black>=24.4.2","ruff>=0.4.7"]
+
+[tool.hatch.build.targets.wheel]
+packages = [
+  "ingestion","cleaning","nlp","regime","prediction",
+  "decision","blackswan","execution","backtest","api","alerts","scripts"
+]

@@ -1,0 +1,177 @@
+# config/markets.yaml
+# Ticker universe and crypto pairs for QUANTSHIFT.
+# Edit this file to add/remove tickers — no code changes needed.
+
+# ── US Stock Universe ──────────────────────────────────────────────────────────
+stocks:
+  # Tier 1: High liquidity, strong NLP signal coverage
+  tier1:
+    - NVDA    # GPU / AI compute
+    - AAPL    # consumer tech
+    - MSFT    # enterprise + cloud + AI
+    - TSLA    # EV / energy
+    - AMZN    # e-commerce + cloud
+    - META    # social + VR
+    - GOOGL   # search + cloud + AI
+    - AMD     # semiconductors
+
+  # Tier 2: Sector plays with strong thesis
+  tier2:
+    - DVN     # energy — AI data center power demand
+    - XOM     # energy
+    - NEE     # utilities — AI power demand
+    - CRM     # software — mispriced on AI fear
+    - NOW     # ServiceNow — ditto
+
+  # Tier 3: Broader market proxies
+  tier3:
+    - SPY     # S&P 500 ETF — used for regime detection
+    - QQQ     # Nasdaq 100 ETF
+    - IWM     # Russell 2000 — small cap signal
+
+  # Combined universe for signal scanning
+  universe:
+    - NVDA
+    - AAPL
+    - MSFT
+    - TSLA
+    - AMZN
+    - META
+    - GOOGL
+    - AMD
+    - SPY
+    - QQQ
+    - DVN
+    - XOM
+    - NEE
+    - CRM
+    - NOW
+
+  # Regime proxy: always track these regardless of signal
+  regime_proxies:
+    - SPY
+    - QQQ
+    - ^VIX    # VIX for volatility monitoring (yfinance)
+
+
+# ── Crypto Pairs ───────────────────────────────────────────────────────────────
+crypto:
+  # Major pairs on Binance (USDT quoted)
+  tier1:
+    - BTC/USDT
+    - ETH/USDT
+    - SOL/USDT
+
+  # Mid-cap with strong on-chain data
+  tier2:
+    - BNB/USDT
+    - AVAX/USDT
+
+  # All active pairs
+  pairs:
+    - BTC/USDT
+    - ETH/USDT
+    - SOL/USDT
+    - BNB/USDT
+    - AVAX/USDT
+
+  # Symbols for on-chain queries (Glassnode uses asset codes)
+  onchain_assets:
+    - BTC
+    - ETH
+
+  # Funding rate symbols on Binance Futures
+  funding_rate_symbols:
+    - BTCUSDT
+    - ETHUSDT
+    - SOLUSDT
+    - BNBUSDT
+    - AVAXUSDT
+
+
+# ── SEC EDGAR Watchlist ────────────────────────────────────────────────────────
+# Form 4 insider trades and 8-K events are tracked for these tickers.
+# Keep this focused — too many tickers slows down EDGAR scraping.
+sec_edgar:
+  high_priority:   # Form 4 + 8-K
+    - NVDA
+    - AAPL
+    - MSFT
+    - TSLA
+    - AMD
+    - DVN
+    - CRM
+
+  medium_priority:  # 8-K only
+    - AMZN
+    - META
+    - GOOGL
+    - NEE
+    - NOW
+
+
+# ── Reddit Subreddit Map ───────────────────────────────────────────────────────
+# Which subreddits are most relevant for each asset class
+reddit:
+  stocks:
+    - wallstreetbets
+    - investing
+    - stocks
+    - SecurityAnalysis
+
+  crypto:
+    - CryptoCurrency
+    - Bitcoin
+    - ethereum
+    - ethfinance
+    - solana
+
+  macro:
+    - economics
+    - financialindependence
+
+
+# ── Twitter / Nitter Finance Accounts ─────────────────────────────────────────
+# High-signal finance accounts to track via Nitter RSS.
+# These are NOT endorsed — just high-follower finance Twitter.
+twitter:
+  options_flow:
+    - unusual_whales      # options flow + dark pool
+    - tradytics           # options data
+
+  breaking_news:
+    - DeItaone            # fast-moving market news
+    - tier10k             # earnings + catalysts
+
+  crypto_specific:
+    - WuBlockchain        # crypto on-chain / exchange news
+    - CryptoQuant_Alert   # on-chain alerts
+
+
+# ── Asset Class Tags ──────────────────────────────────────────────────────────
+# Used by NLP layer to route to correct model (FinBERT vs CryptoBERT)
+asset_tags:
+  crypto:
+    - BTC
+    - ETH
+    - SOL
+    - BNB
+    - AVAX
+
+  stocks:
+    - NVDA
+    - AAPL
+    - MSFT
+    - TSLA
+    - AMZN
+    - META
+    - GOOGL
+    - AMD
+    - SPY
+    - QQQ
+    - IWM
+    - DVN
+    - XOM
+    - NEE
+    - CRM
+    - NOW
